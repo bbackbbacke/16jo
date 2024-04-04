@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .signup-container {
+            width: 300px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .signup-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .signup-container input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .signup-container input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .signup-container input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="module">
+        // Firebase SDK 라이브러리 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // Firebase 구성 정보 설정
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-BCcUDXWIg4mCHgJZIuAa5zXnFL2Lnls",
+            authDomain: "musiclistproject.firebaseapp.com",
+            projectId: "musiclistproject",
+            storageBucket: "musiclistproject.appspot.com",
+            messagingSenderId: "427111708785",
+            appId: "1:427111708785:web:fbac8f3d2dbab1c50ac3d0",
+            measurementId: "G-JDCY1CGEVE"
+        };
+
+        // Firebase 인스턴스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        $(document).ready(function () {
+            $("#signup").click(async function () {
+                let userId = $('#userId').val();
+                let password = $('#password').val();
+                let confirm_password = $('#confirm_password').val();
+                let email = $('#email').val();
+                let nickname = $('#nickname').val();
+                
+                if(userId.length === 0 || password.length === 0 || confirm_password.length === 0||email.length === 0|| nickname.length === 0 ){
+                    alert('빈칸을 채워 주세요')
+                } else if (password === confirm_password) {
+                    // 아이디 중복 확인을 위한 쿼리 생성
+                    const q = query(collection(db, "musicProject"), where("userId", "==", userId));
+                    const querySnapshot = await getDocs(q);
+
+                    // 아이디 중복 확인
+                    if (!querySnapshot.empty) {
+                        alert('이미 사용 중인 아이디입니다.');
+                    } else {
+                        let doc = {
+                            'userId': userId,
+                            'password': password,
+                            'email': email,
+                            'nickname': nickname
+                        };
+
+                        await addDoc(collection(db, "musicProject"), doc);
+                        alert('저장 완료!');
+                        window.location.href = "login.html";
+                    }
+                } else {
+                    alert('비밀번호가 다릅니다.');
+                }
+
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+
+    <div class="signup-container">
+        <h2>Sign Up</h2>
+        <form action="login.html" method="post">
+            <input type="text" id="userId" name="id" placeholder="id" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password"required>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="text" id="nickname" name="nickname" placeholder="Nickname" required>
+            <input type="button" id="signup" value="Sign Up">
+        </form>
+    </div>
+
+</body>
+
+</html>

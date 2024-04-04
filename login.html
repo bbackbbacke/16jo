@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .login-container {
+            width: 300px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .login-container input[type="submit"],
+        .login-container input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            margin-bottom: 15px;
+            border-radius: 3px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .login-container input[type="submit"]:hover,
+        .login-container input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="module">
+        // Firebase SDK 라이브러리 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // Firebase 구성 정보 설정
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-BCcUDXWIg4mCHgJZIuAa5zXnFL2Lnls",
+            authDomain: "musiclistproject.firebaseapp.com",
+            projectId: "musiclistproject",
+            storageBucket: "musiclistproject.appspot.com",
+            messagingSenderId: "427111708785",
+            appId: "1:427111708785:web:fbac8f3d2dbab1c50ac3d0",
+            measurementId: "G-JDCY1CGEVE"
+        };
+
+        // Firebase 인스턴스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        $(document).ready(function () {
+            $("#loginbtn").click(async function () {
+                let userId = $('#userId').val();
+                let password = $('#password').val();
+
+                console.log(userId, password)
+                let querySnapshot = await getDocs(collection(db, "musicProject"));
+                let found = false;
+
+                querySnapshot.forEach((doc) => {
+                    let row = doc.data();
+                    let dbUserId = row['userId'];
+                    let dbPassword = row['password'];
+
+                    if (userId === dbUserId && password === dbPassword) {
+                        found = true;
+                    }
+                });
+
+                if (found) {
+                    window.location.href = "index.html";
+                    alert('로그인 성공')
+                } else {
+                    alert('아이디 혹은 비밀번호를 확인하세요!');
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="index.html" method="get">
+            <input type="text" id="userId" name="userId" placeholder="userId">
+            <input type="password" id="password" name="password" placeholder="Password">
+            <input type="button" id="loginbtn" value="Login">
+        </form>
+        <form action="join.html" method="get">
+            <input type="submit" value="Sign Up" class="button">
+        </form>
+    </div>
+</body>
+
+</html>

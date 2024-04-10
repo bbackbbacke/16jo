@@ -1,19 +1,21 @@
 const mysql = require('mysql')
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'testuser',
-    password: '3545',
-    port: 3300,
-    database: 'test'
-});
+require('dotenv').config();
 
-// const mysql = require('mysql')
 // const connection = mysql.createConnection({
-//     host: '15.165.92.197',
-//     user: 'JUYEON',
-//     password: 'a1234',
-//     port: 3306,
-//     database: 'jomijin'
+
+//     host: process.env.DB_HOST2,
+//     user: process.env.DB_USER2,
+//     password: process.env.DB_PASSWORD2,
+//     port: process.env.DB_POSRT2,
+//     database: process.env.DB_DATABASE2
 // });
+
+const connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    port: process.env.PORT,
+    database: process.env.DB_DATABASE
+});
 
 module.exports = connection;

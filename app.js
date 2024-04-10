@@ -7,7 +7,7 @@ var session = require('express-session')
 
 var connection = require('./db');
 
-
+require('dotenv').config();
 //바디 파싱 허용
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -21,6 +21,7 @@ app.use(session({
 
 app.get('/signup', (request, response) => {
     response.sendFile(__dirname + '/signup.html');
+    console.log(process.env.DB_USER2)
 })
 
 app.post('/signup', (request, response) => {

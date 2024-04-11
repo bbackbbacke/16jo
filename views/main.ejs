@@ -82,12 +82,15 @@
         </button>
       </div>
     </header>
-
     <!-- body -->
 
     <!-- 랭킹 -->
-    <div class="main_contain">
+
+
+</body>
+    <div class="main_contain" id="al">
       <div class="contain">
+        <form action="">
         <div class="ranking" load="totalpost()">
           <table id="total" class="table table-dark table-hover">
             <h1>🖤조회수 랭킹🖤</h1>
@@ -96,8 +99,16 @@
               <th>제목</th>
               <th>작성자</th>
             </tr>
+            <% for(let i = 0; i<data.length; i++){ %>
+              <tr>
+                <th><%=i+1%></th>
+                <th><%=data[i].title%></th>
+                <th><%=data[i].users%>></th>
+              </tr>
+              <% } %>
           </table>
         </div>
+      </form>
         <div class="ranking">
           <table id="today" class="table table-dark table-hover">
             <h1>🖤오늘의 노래 추천🖤</h1>
@@ -106,6 +117,13 @@
               <th>제목</th>
               <th>작성자</th>
             </tr>
+            <% for(let i = 0; i<data.length; i++){ %>
+                <tr>
+                  <th><%=data[i].post_id%></th>
+                  <th><%=data[i].title%></th>
+                  <th><%=data[i].users%>></th>
+                </tr>
+                <% } %>
           </table>
         </div>
       </div>

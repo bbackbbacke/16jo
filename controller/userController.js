@@ -2,8 +2,13 @@ const user = require("../model/user");
 
 //메인화면
 exports.index = (req, res) => {
-    res.render("main");
+    user.get_ranking(function(result){
+        console.log("result :",result);
+        res.render("main",{data : result});
+    })
 }
+
+
 
 //User 정보 저장하기
 exports.post_user = (req, res) => {
@@ -21,6 +26,7 @@ exports.join = (req, res) => {
 exports.login = (req, res) => {
     res.render("login");
 }
+// 랭킹화면
 
 //login 시도
 exports.post_login = (req, res) => {

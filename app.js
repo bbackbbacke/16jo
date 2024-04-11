@@ -1,13 +1,38 @@
 
 const express = require('express')
-const app = express()
 const port = 3000
 var bodyParser = require('body-parser')
 var session = require('express-session')
+require('dotenv').config();
 
 var connection = require('./db');
 
-require('dotenv').config();
+var session = require('express-session');
+
+
+//세션 저장소
+var MySQLStore = require('express-mysql-session')(session);
+
+
+const app = express()
+var options = {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    port: process.env.PORT,
+    database: process.env.DB_DATABASE
+};
+var sessionStore = new MySQLStore(options);
+
+app.use(session({
+    secret: "asdfasffdas",
+    resave: false,
+    saveUninitialized: true,
+    store: sessionStore
+}))
+
+
+
 //바디 파싱 허용
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -53,9 +78,9 @@ app.post('/signup', (request, response) => {
 
 app.get('/', (request, response) => {
     if (request.session.user_id) {
-        console.log(request.session.user_id)
+        console.log("session.user_id" + request.session.user_id)
     }
-    response.sendFile(__dirname + '/index.html')
+    response.sendFile(__dirname + '/juyeon.html')
 })
 
 app.get('/login', (request, response) => {
@@ -76,9 +101,10 @@ app.post('/login', (request, response) => {
             response.send("<script> alert('존재하지 않는 아이디입니다.');location.href='/login';</script>")
         } else {
             console.log(result[0]);
-
-            request.session.user_id = result[0].user_id;
-            response.send("<script>alert('로그인 되었습니다..'); location.href='/';</script>")
+            //세션 저장하는 부분입니다.
+            // request.session.user_id = result[0].user_id;
+            request.session.uid = result[0].user_id; // 세션에 사용자 정보 저장
+            response.redirect('/');
         }
     })
 })
@@ -87,3 +113,26 @@ app.post('/login', (request, response) => {
 app.listen(port, () => {
     console.log(`예제 앱이 http://localhost:${port} 에서 실행 중입니다.`);
 });
+
+
+
+app.post('/save', (req, res) => {
+
+    // console.log(req.session.userid);
+    var pk = 0;
+    var title = req.body.title;
+    var content = req.body.content;
+    var name = req.body.name;
+    var artist = req.body.artist;
+    var id = req.session.uid
+    if (id) {
+        res.send("<script>alert('로그인 되었습니다..'); location.href='/';</script>")
+        console.log("현재 유저 아이디는 "+ id)
+    } else {
+        res.send("<script>alert('xx 되었습니다..'); location.href='/';</script>")
+        console.log(id)
+
+
+    }
+});
+

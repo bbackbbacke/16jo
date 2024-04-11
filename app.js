@@ -127,7 +127,7 @@ app.post('/save', (req, res) => {
     var id = req.session.uid
     if (id) {
         res.send("<script>alert('로그인 되었습니다..'); location.href='/';</script>")
-        console.log("현재 유저 아이디는 "+ id)
+        console.log("현재 유저 아이디는 " + id)
     } else {
         res.send("<script>alert('xx 되었습니다..'); location.href='/';</script>")
         console.log(id)
@@ -135,4 +135,3 @@ app.post('/save', (req, res) => {
 
     }
 });
-

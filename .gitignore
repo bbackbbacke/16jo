@@ -1,3 +1,5 @@
-/node_modules
+node_modules/
 .env
-demo_db_connection.js
+.env.test
+.env.production
+.epm

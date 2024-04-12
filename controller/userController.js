@@ -5,6 +5,7 @@ exports.index = (req, res) => {
     user.get_ranking(function(result){
         console.log("result :",result);
         res.render("main",{data : result});
+
     })
 }
 
@@ -26,19 +27,7 @@ exports.join = (req, res) => {
 exports.login = (req, res) => {
     res.render("login");
 }
-// 랭킹화면
 
-//login 시도
-exports.post_login = (req, res) => {
-    user.select( req.body.id, req.body.pw, function (result) {
-        if (result == null) {
-            return res.send({result: result, flag: false});
-        } else{
-            if (req.body.pw != result.pw) {
-                return res.send({result: result, flag: false});
-            }else {
-                return res.send({result: result, flag: true});
-            }
-        }
-    });
-}
+
+
+

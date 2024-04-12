@@ -74,7 +74,7 @@
       </div>
 
       <div class="col-md-3 text-end">
-        <button id="logincall" type="button" class="btn btn-outline-dark me-2">
+        <button onclick="location.href='login'" type="button" class="btn btn-outline-dark me-2">
           Login
         </button>
         <button onclick="location.href='join';" id="signCall" type="button" class="btn btn-dark">
@@ -119,7 +119,7 @@
             </tr>
             <% for(let i = 0; i<data.length; i++){ %>
                 <tr>
-                  <th><%=data[i].post_id%></th>
+                  <th><%=i+1%></th>
                   <th><%=data[i].title%></th>
                   <th><%=data[i].users%>></th>
                 </tr>

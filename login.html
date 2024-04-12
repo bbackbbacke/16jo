@@ -56,28 +56,12 @@
     <div class="login-container">
       <h2>Login</h2>
       <form action="/login" method="post">
-        <input
-          type="text"
-          id="member_id"
-          name="member_id"
-          placeholder="member_id"
-          required
-        />
+        <input  type="text" id="member_id" name="member_id" placeholder="member_id" required/>
         <input type="password" id="pw" name="pw" placeholder="pw" required />
-        <input
-          type="button"
-          id="loginbtn"
-          onclick="location.href='/'"
-          value="Login"
-        />
+        <input type="submit" id="loginbtn" value="Login" />
       </form>
       <form action="/signup" method="get">
-        <input
-          type="button"
-          value="Sign Up"
-          class="button"
-          onclick="location.href='signup'"
-        />
+        <input type="submit" value="Sign Up" class="button" />
       </form>
     </div>
   </body>

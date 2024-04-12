@@ -27,15 +27,7 @@ exports.insert = ( data, cb ) => {
     });
 }
 
-//로그인 정보 읽기
-exports.select = ( id, pw, cb ) => {
-    var sql = `SELECT * FROM user WHERE member_id='${id}' limit 1`;
 
-    db.query(sql, (err, rows) => {
-        if ( err ) throw err;
-        cb( rows[0] );
-    });
-}
 //게시판 조회수 랭킹
 exports.get_ranking = (cb) => {
     db.query(`SELECT users, title, rank() over(order by view desc) as ranked FROM posts`, (err, rows) => {
@@ -51,17 +43,4 @@ exports.get_ranking2 = (cb) => {
         console.log( rows );
         cb( rows )
     });
-}
-exports.loginProc= (cb)=>{
-    const member_id = req.body.name;
-    const pw = req.pw;
-
-    var sql = `select * from member where member_id=? and pw=?`
-
-    var values = [member_id, pw];
-
-    db.query(sql, values, function(err, result){
-        if(err) throw err;
-        res.send(cb)
-    })
 }

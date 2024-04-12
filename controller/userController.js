@@ -2,11 +2,12 @@ const user = require("../model/user");
 
 //메인화면
 exports.index = (req, res) => {
-    user.get_ranking(function(result){
-        console.log("result :",result);
-        res.render("main",{data : result});
+    res.render("join")
+    // user.get_ranking(function(result){
+    //     console.log("result :",result);
+        // res.render("join",{data : result});
 
-    })
+    // })
 }
 
 
@@ -28,6 +29,19 @@ exports.login = (req, res) => {
     res.render("login");
 }
 
-
+//login 시도
+exports.post_login = (req, res) => {
+    User.select( req.body.id, req.body.password, function (result) {
+        if (result == null) {
+            return res.send({result: result, flag: false});
+        } else{
+            if (req.body.password != result.password) {
+                return res.send({result: result, flag: false});
+            }else {
+                return res.send({result: result, flag: true});
+            }
+        }
+    });
+}
 
 

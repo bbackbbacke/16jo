@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Homepage</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      .hpg {
+        font-size: 50px;
+        text-align: center;
+        margin-top: 50px;
+      }
+      .fk {
+        text-align: center;
+        padding-bottom: 5px;
+        margin-top: 100px;
+      }
+      .wiw {
+        font-size: 30px;
+        color: rgb(69, 69, 69);
+      }
+      .table {
+        text-align: center;
+        margin: 10px auto;
+        max-width: 80%;
+        border-top-left-radius: 15px; border-top-right-radius: 15px;
+        	border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
+        
+      }
+      .table thread th,
+      .table tbody th{
+        padding: 10px;
+      }
+
+      .hrOnply {
+        margin-top: 0px;
+      }
+      .ply {
+        margin: auto;
+        text-align: center;
+        padding-bottom: 5px;
+        margin-top: 100px;
+      }
+      #playlist-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* 중앙 정렬 유지 */
+  align-items: center;
+  gap: 20px;
+  padding: 40px;
+  margin: auto;
+  border: 1px solid black;
+  max-width: 80%;
+  background-color: green;
+}
+.line{
+    display:flex;
+    flex-basis:100%;
+    align-items:center;
+    color:black;
+    font-size:30px;
+    margin:8px 0px;
+}
+.line::before{
+    content:"";
+    flex-grow:1;
+    margin:0px 16px;
+    background:rgba(0,0,0,0.35);
+    height:1px;
+    font-size:0px;
+    line-height: 0px;
+}
+.line::after{
+    content:"";
+    flex-grow:1;
+    margin:0px 16px;
+    background:rgba(0,0,0,0.35);
+    height:1px;
+    font-size:0px;
+    line-height: 0px;
+}
+#chartList{
+  list-style: none;
+}
+          </style>
+  </head>
+
+  <body>
+    <h1 class="hpg">My Homepage</h1>
+
+    <div class="container-fluid">
+      <div class="row justify-content-end">
+        <div class="col-auto">
+          <button type="button" onclick="location.href='/'" class="btn btn-secondary btn-sm">
+            Home
+            <!-- button에  onClick="어쩌구저쩌구.html' 추가해서 페이지이동하게 만들기  -->
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="fk">
+      <h1 class="wiw">내가 쓴 글</h1>
+      <!-- 나중에 내가 쓴 글에서 내 부분에 로그인 했던 '로그인 아이디+님'가 들어갔음 좋겠어요 예시 "abc님이 쓴 글" -->
+    </div>
+
+    <div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">작성일</th>
+            <th scope="col">제목</th>
+            <th scope="col">조회수</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>2023.4.7.</td>
+            <td>다들 요즘 뭐 들으세요?</td>
+            <td>475</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>2024.4.7.</td>
+            <td>봄에 듣기 좋은 봄 노래 추천!</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>2025.4.7.</td>
+            <td>@코딩할 때 듣기 좋은 노래 모음@</td>
+            <td>1234351</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr class="hrOnply" />
+
+    <div class="ply">
+        <title>Music Playlist</title>
+    </head>
+    <body>
+        <h1 class="line">Music Chart</h1>
+        <button class="btn btn-secondary btn-sm" onclick="toggleChart()">어떤 음악이 인기 있을까?</button>
+        <ul id="chartList" style="display: none;"></ul>
+      
+        <script>
+          let chartVisible = false;
+      
+          async function toggleChart() {
+            chartVisible = !chartVisible;
+      
+            if (chartVisible) {
+              await getTopTracks();
+              document.getElementById('chartList').style.display = 'block';
+            } else {
+              document.getElementById('chartList').innerHTML = '';
+              document.getElementById('chartList').style.display = 'none';
+            }
+          }
+      
+          async function getTopTracks() {
+            const apiKey = '524eb087a3548743086a602729403094';
+            const apiUrl = `https://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=${apiKey}&format=json`;
+      
+            try {
+              const response = await fetch(apiUrl);
+              const data = await response.json();
+              const chartList = document.getElementById('chartList');
+              chartList.innerHTML = ''; // Clear previous results
+      
+              if (data.tracks.track.length > 0) {
+                data.tracks.track.forEach(track => {
+                  const listItem = document.createElement('li');
+                  listItem.textContent = `${track.name} - ${track.artist.name}`;
+                  chartList.appendChild(listItem);
+                });
+              } else {
+                const listItem = document.createElement('li');
+                listItem.textContent = 'No top tracks found';
+                chartList.appendChild(listItem);
+              }
+            } catch (error) {
+              console.error('Error fetching top tracks:', error);
+            }
+          }
+        </script>
+      </body>
+</html>

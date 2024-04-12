@@ -3,12 +3,12 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var connection = require('./db');
 
-const app = express();
 const port = 3000;
 require('dotenv').config();
 
 //세션 저장소
-var MySQLStore = require('express-mysql-session')(session);
+const MySQLStore = require('express-mysql-session')(session);
+const app = express();
 
 var options = {
   host: process.env.DB_HOST,
@@ -17,27 +17,24 @@ var options = {
   port: process.env.PORT,
   database: process.env.DB_DATABASE,
 };
-var sessionStore = new MySQLStore(options);
-
-app.use(
-  session({
-    secret: 'asdfasffdas',
-    resave: false,
-    saveUninitialized: true,
-    store: sessionStore,
-  })
-);
+const sessionStore = new MySQLStore(options);
 
 //바디 파싱 허용
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(
-  session({
-    secret: 'jomijin',
-    resave: true,
-    saveUninitialized: true,
-  })
-);
+// app.use(session({
+//     key: 'session_cookie_name',
+//     secret: 'session_cookie_secret',
+//     store: sessionStore,
+//     resave: false,
+//     saveUninitialized: false
+// }));
+
+app.use(session({
+  secret: 'session-secret123!@#',
+  resave: false,
+  saveUninitialized: false,
+}));
 
 app.get('/signup', (request, response) => {
   response.sendFile(__dirname + '/signup.html');
@@ -84,7 +81,7 @@ app.post('/signup', (request, response) => {
 // http://localhost:3000
 app.get('/', (request, response) => {
   if (request.session.user_id) {
-    console.log('session.user_id' + request.session.user_id);
+    console.log('session.user_id');
   }
   response.sendFile(__dirname + '/MAIN.html');
 });
@@ -128,7 +125,8 @@ app.post('/login', (request, response) => {
       console.log(result[0]);
       //세션 저장하는 부분입니다.
       // request.session.user_id = result[0].user_id;
-      request.session.uid = result[0].user_id; // 세션에 사용자 정보 저장
+      request.session.user_id = result[0].user_id; // 세션에 사용자 정보 저장
+      console.log('session.user_id : ' + request.session.user_id);
       response.redirect('/');
     }
   });

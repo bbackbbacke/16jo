@@ -134,21 +134,31 @@ app.post('/login', (request, response) => {
 });
 
 app.post('/save', (req, res) => {
+
+  //console.log(session.getItem('member_id'));s
   var pk = 0;
   var title = req.body.title;
   var content = req.body.content;
   var name = req.body.name;
   var artist = req.body.artist;
-  var id = req.session.uid;
-  if (id) {
-    res.send(
-      "<script>alert('로그인 되었습니다..'); location.href='/';</script>"
-    );
-    console.log('현재 유저 아이디는 ' + id);
-  } else {
-    res.send("<script>alert('xx 되었습니다..'); location.href='/';</script>");
-    console.log(id);
-  }
+  var id = req.body.id;
+  var member_id = "";
+
+  connection.query('SELECT count(post_id) AS A from posts, ', (error, rows) => {
+    if (error) throw error;
+    console.log(typeof rows[0].A);
+    pk = rows[0].A;
+  });
+  var sql = 'SELECT member_id from member where user_id=?';
+  connection.query(sql, [id], function (err, result) {
+    if (err) throw err;
+    member_id = result[0].member_id;
+  })
+  var sql = 'INSERT INTO posts(post_id, songTitle, singer, title, content, users, view) VALUES (?,?,?,?,?,?,?)';
+  connection.query(sql, [pk, name, artist, title, content, member_id, 0], function (err, result) {
+    if (err) throw err;
+
+  })
 });
 
 
@@ -156,7 +166,17 @@ app.post('/save', (req, res) => {
 // http://localhost:3000  ejs test
 app.get('/ejs', (request, response) => {
   // response.sendFile(__dirname + '/MAIN.html');
-  response.render('MAIN',{text:"dd"})
+  let id = request.session.user_id
+  console.log("ejs test id : " + id);
+  let user_name = '';
+  if(id) {
+    connection.query('SELECT user_name from member where user_id = ? ',[id], (error, result) => {
+      if (error) throw error;
+      user_name = result[0];
+      console.log(user_name)
+    });
+  }
+  response.render('MAIN', { user : user_name })
 });
 
 

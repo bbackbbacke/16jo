@@ -10,6 +10,10 @@ require('dotenv').config();
 const MySQLStore = require('express-mysql-session')(session);
 const app = express();
 
+//ejs 설정
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+
 var options = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -80,9 +84,6 @@ app.post('/signup', (request, response) => {
 });
 // http://localhost:3000
 app.get('/', (request, response) => {
-  if (request.session.user_id) {
-    console.log('session.user_id');
-  }
   response.sendFile(__dirname + '/MAIN.html');
 });
 
@@ -133,7 +134,6 @@ app.post('/login', (request, response) => {
 });
 
 app.post('/save', (req, res) => {
-  // console.log(req.session.userid);
   var pk = 0;
   var title = req.body.title;
   var content = req.body.content;
@@ -150,6 +150,15 @@ app.post('/save', (req, res) => {
     console.log(id);
   }
 });
+
+
+
+// http://localhost:3000  ejs test
+app.get('/ejs', (request, response) => {
+  // response.sendFile(__dirname + '/MAIN.html');
+  response.render('MAIN',{text:"dd"})
+});
+
 
 app.listen(port, () => {
   console.log(`예제 앱이 http://localhost:${port} 에서 실행 중입니다.`);

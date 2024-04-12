@@ -1,18 +1,18 @@
-const express = require('express');
-var session = require('express-session');
-var bodyParser = require('body-parser');
-var connection = require('./db');
-const ejs = require('ejs');
+const express = require("express");
+var session = require("express-session");
+var bodyParser = require("body-parser");
+var connection = require("./db");
+const ejs = require("ejs");
 const port = 3000;
-require('dotenv').config();
+require("dotenv").config();
 
 //세션 저장소
-const MySQLStore = require('express-mysql-session')(session);
+const MySQLStore = require("express-mysql-session")(session);
 const app = express();
 
 //ejs 설정
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
+app.set("view engine", "ejs");
+app.set("views", __dirname + "/views");
 
 var options = {
   host: process.env.DB_HOST,
@@ -25,7 +25,7 @@ const sessionStore = new MySQLStore(options);
 
 //바디 파싱 허용
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(bodyParser.json());
 // app.use(session({
 //     key: 'session_cookie_name',
 //     secret: 'session_cookie_secret',
@@ -36,18 +36,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: 'session-secret123!@#',
+    secret: "session-secret123!@#",
     resave: false,
     saveUninitialized: false,
   })
 );
 
-app.get('/signup', (request, response) => {
-  response.sendFile(__dirname + '/signup.html');
+app.get("/signup", (request, response) => {
+  response.sendFile(__dirname + "/signup.html");
   console.log(process.env.DB_USER2);
 });
 
-app.post('/signup', (request, response) => {
+app.post("/signup", (request, response) => {
   let member_id = request.body.member_id;
   let pw = request.body.pw;
   let confirm_pw = request.body.confirm_pw;
@@ -56,20 +56,20 @@ app.post('/signup', (request, response) => {
 
   if (member_id && pw && confirm_pw) {
     connection.query(
-      'select * from member where member_id = ?',
+      "select * from member where member_id = ?",
       [member_id],
       function (err, results) {
         if (err) throw error;
         if (results.length <= 0 && pw == confirm_pw) {
           var sql =
-            'insert into member (member_id, pw, email, user_name) values(?,?,?,?)';
+            "insert into member (member_id, pw, email, user_name) values(?,?,?,?)";
           var values = [member_id, pw, email, user_name];
           connection.query(sql, values, function (err, data) {
             if (err) throw error2;
             response.send(
               "<script> alert('환영합니다.');location.href='/';</script>"
             );
-            console.log(member_id + ' sign up');
+            console.log(member_id + " sign up");
           });
         } else if (pw != confirm_pw) {
           response.send(
@@ -91,37 +91,72 @@ app.post('/signup', (request, response) => {
 //   }
 //   response.render('MAIN');
 // });
+// test.html 전용 index.js _ post
+app.post("/saveTwo", (req, res) => {
+  //console.log(session.getItem('member_id'));s
+  var pk = 0;
+  var title = req.body.title;
+  var content = req.body.content;
+  var name = req.body.name;
+  var artist = req.body.artist;
+  var date = new Date();
+  var userId = req.session.user_id;
+  
+    console.log("현재 사용자 : " + req.session.user_id);
 
+
+  console.log(date);
+  connection.query("SELECT max(post_id) AS A from posts", (error, rows) => {
+    if (error) throw error;
+    console.log("~~ query SELECT result : " + rows[0].A + "~~");
+    pk = rows[0].A + 1;
+    var sql2 =
+      "INSERT INTO posts(post_id, songTitle, singer, title, content, users, view, date) VALUES (?,?,?,?,?,?,?,?)";
+    connection.query(
+      sql2,
+      [pk, name, artist, title, content, userId, 0, date],
+      function (err, result) {
+        if (err) throw err;
+        console.log("Success Insert saveTwo data ");
+      }
+    );
+  });
+});
 // http://localhost:3000/test (폴더 달라져서 경로 지정 새로 했습니다! /public을 추가했어요)
-app.get('/test', (request, response) => {
+app.get("/test", (request, response) => {
   if (request.session.user_id) {
-    console.log('session.user_id' + request.session.user_id);
+    console.log("session.user_id" + request.session.user_id);
+    response.sendFile(__dirname + "/test.html");
+  } else {
+    response.send(
+      "<script>alert('~ 로그인 후 이용해주세요 ~'); location.href='/';</script>"
+    );
+    response.sendFile(_dirname + "/MAIN.html");
   }
-  response.sendFile(__dirname + '/public/test.html');
 });
 
 //http://localhost:3000/practice 마이페이지
 // http://localhost:3000  ejs test
-app.get('/practice', (request, response) => {
+app.get("/practice", (request, response) => {
   // response.sendFile(__dirname + '/practice.html');
-  var sql = 'select * from posts';
+  var sql = "select * from posts";
   connection.query(sql, function (err, result) {
     if (err) throw err;
-    response.render('practice', { posts: result });
+    response.render("practice", { posts: result });
   });
 });
 
 // http://localhost:3000/login 로그인
-app.get('/login', (request, response) => {
-  response.sendFile(__dirname + '/login.html');
+app.get("/login", (request, response) => {
+  response.sendFile(__dirname + "/login.html");
 });
 
 // http://localhost:3000/signup 회원가입
-app.get('/signup', (request, response) => {
-  response.sendFile(__dirname + '/signup.html');
+app.get("/signup", (request, response) => {
+  response.sendFile(__dirname + "/signup.html");
 });
 
-app.post('/login', (request, response) => {
+app.post("/login", (request, response) => {
   const member_id = request.body.member_id;
   const pw = request.body.pw;
 
@@ -140,18 +175,18 @@ app.post('/login', (request, response) => {
       //세션 저장하는 부분입니다.
       // request.session.user_id = result[0].user_id;
       request.session.user_id = result[0].user_id; // 세션에 사용자 정보 저장
-      console.log('session.user_id : ' + request.session.user_id);
-      response.redirect('/');
+      console.log("session.user_id : " + request.session.user_id);
+      response.redirect("/");
     }
   });
 });
-app.get('/practice', (request, response) => {
+app.get("/practice", (request, response) => {
   // response.sendFile(__dirname + '/practice.html');
   var sql =
-    'SELECT users, title, rank() over(order by view desc) as ranked FROM posts';
+    "SELECT users, title, rank() over(order by view desc) as ranked FROM posts";
   connection.query(sql, function (err, result) {
     if (err) throw err;
-    response.render('practice', { post: result });
+    response.render("practice", { post: result });
   });
 });
 
@@ -170,9 +205,9 @@ app.get('/practice', (request, response) => {
 //   })
 // }
 
-app.set('views', __dirname + '/views');
+app.set("views", __dirname + "/views");
 
-app.post('/save', (req, res) => {
+app.post("/save", (req, res) => {
   var pk = 0;
   var title = req.body.title;
   var content = req.body.content;
@@ -183,7 +218,7 @@ app.post('/save', (req, res) => {
     res.send(
       "<script>alert('로그인 되었습니다..'); location.href='/';</script>"
     );
-    console.log('현재 유저 아이디는 ' + id);
+    console.log("현재 유저 아이디는 " + id);
   } else {
     res.send("<script>alert('xx 되었습니다..'); location.href='/';</script>");
     console.log(id);
@@ -191,20 +226,20 @@ app.post('/save', (req, res) => {
 });
 
 // http://localhost:3000  ejs test
-app.get('/ejs', (request, response) => {
+app.get("/ejs", (request, response) => {
   // response.sendFile(__dirname + '/MAIN.html');
-  response.render('MAIN', { text: 'dd' });
+  response.render("MAIN", { text: "dd" });
 });
 
 app.listen(port, () => {
   console.log(`예제 앱이 http://localhost:${port} 에서 실행 중입니다.`);
 });
 
-app.get('/', (request, response) => {
+app.get("/", (request, response) => {
   var sql =
-    'SELECT users, title, rank() over(order by view desc) as ranked FROM posts limit 5';
+    "SELECT users, title, rank() over(order by view desc) as ranked FROM posts limit 5";
   connection.query(sql, function (err, result) {
     if (err) throw err;
-    response.render('MAIN', { data: result });
+    response.render("MAIN", { data: result });
   });
 });

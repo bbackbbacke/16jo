@@ -10,7 +10,13 @@ require('dotenv').config();
 const MySQLStore = require('express-mysql-session')(session);
 const app = express();
 
+<<<<<<< HEAD
 
+=======
+//ejs 설정
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+>>>>>>> 4692f2685dc37980d655e16fe137a668045bf097
 
 var options = {
   host: process.env.DB_HOST,
@@ -86,11 +92,15 @@ app.post('/signup', (request, response) => {
 });
 // http://localhost:3000
 app.get('/', (request, response) => {
+<<<<<<< HEAD
   if (request.session.user_id) {
     console.log('session.user_id');
   }
   
   response.sendFile(__dirname + '/MAIN.ejs');
+=======
+  response.sendFile(__dirname + '/MAIN.html');
+>>>>>>> 4692f2685dc37980d655e16fe137a668045bf097
 });
 
 // http://localhost:3000/test (폴더 달라져서 경로 지정 새로 했습니다! /public을 추가했어요)
@@ -139,6 +149,7 @@ app.post('/login', (request, response) => {
   });
 });
 
+<<<<<<< HEAD
 // app.get('/') = (req, res) => {
 //     get_ranking = (cb) => {
 //     db.query(`SELECT users, title, rank() over(order by view desc) as ranked FROM posts limit(5)`, (err, rows) => {
@@ -155,6 +166,35 @@ app.post('/login', (request, response) => {
 // }
 
 app.set('views', __dirname + '/views');
+=======
+app.post('/save', (req, res) => {
+  var pk = 0;
+  var title = req.body.title;
+  var content = req.body.content;
+  var name = req.body.name;
+  var artist = req.body.artist;
+  var id = req.session.uid;
+  if (id) {
+    res.send(
+      "<script>alert('로그인 되었습니다..'); location.href='/';</script>"
+    );
+    console.log('현재 유저 아이디는 ' + id);
+  } else {
+    res.send("<script>alert('xx 되었습니다..'); location.href='/';</script>");
+    console.log(id);
+  }
+});
+
+
+
+// http://localhost:3000  ejs test
+app.get('/ejs', (request, response) => {
+  // response.sendFile(__dirname + '/MAIN.html');
+  response.render('MAIN',{text:"dd"})
+});
+
+
+>>>>>>> 4692f2685dc37980d655e16fe137a668045bf097
 app.listen(port, () => {
   console.log(`예제 앱이 http://localhost:${port} 에서 실행 중입니다.`);
 });

@@ -97,7 +97,7 @@ app.get('/test', (request, response) => {
   response.sendFile(__dirname + '/public/test.html');
 });
 
-//http://localhost:3000/practice
+//http://localhost:3000/practice 마이페이지
 app.get('/practice', (request, response) => {
   if (request.session.user_id) {
     console.log('session.user_id' + request.session.user_id);
@@ -105,7 +105,7 @@ app.get('/practice', (request, response) => {
   response.sendFile(__dirname + '/practice.html');
 });
 
-// http://localhost:3000/login
+// http://localhost:3000/login 로그인
 app.get('/login', (request, response) => {
   response.sendFile(__dirname + '/login.html');
 });

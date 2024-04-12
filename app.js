@@ -34,11 +34,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     saveUninitialized: false
 // }));
 
-app.use(session({
-  secret: 'session-secret123!@#',
-  resave: false,
-  saveUninitialized: false,
-}));
+app.use(
+  session({
+    secret: 'session-secret123!@#',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.get('/signup', (request, response) => {
   response.sendFile(__dirname + '/signup.html');
@@ -151,14 +153,11 @@ app.post('/save', (req, res) => {
   }
 });
 
-
-
 // http://localhost:3000  ejs test
 app.get('/ejs', (request, response) => {
   // response.sendFile(__dirname + '/MAIN.html');
-  response.render('MAIN',{text:"dd"})
+  response.render('MAIN', { text: 'dd' });
 });
-
 
 app.listen(port, () => {
   console.log(`예제 앱이 http://localhost:${port} 에서 실행 중입니다.`);

@@ -98,11 +98,14 @@ app.get('/test', (request, response) => {
 });
 
 //http://localhost:3000/practice 마이페이지
+// http://localhost:3000  ejs test
 app.get('/practice', (request, response) => {
-  if (request.session.user_id) {
-    console.log('session.user_id' + request.session.user_id);
-  }
-  response.sendFile(__dirname + '/practice.html');
+  // response.sendFile(__dirname + '/practice.html');
+  var sql = 'select * from posts';
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+    response.render('practice', { posts: result });
+  });
 });
 
 // http://localhost:3000/login 로그인

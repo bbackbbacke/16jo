@@ -10,13 +10,9 @@ require('dotenv').config();
 const MySQLStore = require('express-mysql-session')(session);
 const app = express();
 
-
-
-
 //ejs 설정
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
-
 
 var options = {
   host: process.env.DB_HOST,
@@ -26,8 +22,6 @@ var options = {
   database: process.env.DB_DATABASE,
 };
 const sessionStore = new MySQLStore(options);
-
-
 
 //바디 파싱 허용
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -90,14 +84,13 @@ app.post('/signup', (request, response) => {
     );
   }
 });
-// http://localhost:3000
-app.get('/', (request, response) => {
-  if (request.session.user_id) {
-    console.log('session.user_id');
-  }
-  
-  response.render('practice');
-});
+// // http://localhost:3000
+// app.get('/', (request, response) => {
+//   if (request.session.user_id) {
+//     console.log('session.user_id');
+//   }
+//   response.render('MAIN');
+// });
 
 // http://localhost:3000/test (폴더 달라져서 경로 지정 새로 했습니다! /public을 추가했어요)
 app.get('/test', (request, response) => {
@@ -121,6 +114,11 @@ app.get('/practice', (request, response) => {
 // http://localhost:3000/login 로그인
 app.get('/login', (request, response) => {
   response.sendFile(__dirname + '/login.html');
+});
+
+// http://localhost:3000/signup 회원가입
+app.get('/signup', (request, response) => {
+  response.sendFile(__dirname + '/signup.html');
 });
 
 app.post('/login', (request, response) => {
@@ -149,7 +147,8 @@ app.post('/login', (request, response) => {
 });
 app.get('/practice', (request, response) => {
   // response.sendFile(__dirname + '/practice.html');
-  var sql = 'SELECT users, title, rank() over(order by view desc) as ranked FROM posts';
+  var sql =
+    'SELECT users, title, rank() over(order by view desc) as ranked FROM posts';
   connection.query(sql, function (err, result) {
     if (err) throw err;
     response.render('practice', { post: result });
@@ -197,8 +196,15 @@ app.get('/ejs', (request, response) => {
   response.render('MAIN', { text: 'dd' });
 });
 
-
-
 app.listen(port, () => {
   console.log(`예제 앱이 http://localhost:${port} 에서 실행 중입니다.`);
+});
+
+app.get('/', (request, response) => {
+  var sql =
+    'SELECT users, title, rank() over(order by view desc) as ranked FROM posts limit 5';
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+    response.render('MAIN', { data: result });
+  });
 });

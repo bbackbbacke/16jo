@@ -1,70 +1,68 @@
 <!DOCTYPE html>
 <html lang="ko">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+      }
 
-        .login-container {
-            width: 300px;
-            margin: 100px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+      .login-container {
+        width: 300px;
+        margin: 100px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
 
-        .login-container h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
+      .login-container h2 {
+        margin-bottom: 20px;
+        text-align: center;
+      }
 
-        .login-container input[type="text"],
-        .login-container input[type="password"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
+      .login-container input[type='text'],
+      .login-container input[type='password'] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
 
-        .login-container input[type="submit"],
-        .login-container input[type="button"] {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            margin-bottom: 15px;
-            border-radius: 3px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-        }
+      .login-container input[type='submit'],
+      .login-container input[type='button'] {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        margin-bottom: 15px;
+        border-radius: 3px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+      }
 
-        .login-container input[type="submit"]:hover,
-        .login-container input[type="button"]:hover {
-            background-color: #0056b3;
-        }
+      .login-container input[type='submit']:hover,
+      .login-container input[type='button']:hover {
+        background-color: #0056b3;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="login-container">
-        <h2>Login</h2>
-        <form action="/login" method="post">
-            <input type="text" id="member_id" name="member_id" placeholder="member_id" required>
-            <input type="password" id="pw" name="pw" placeholder="pw" required>
-            <input type="submit" id="loginbtn" value="Login">
-        </form>
-        <form action="/signup" method="get">
-            <input type="submit" value="Sign Up" class="button">
-        </form>
+      <h2>Login</h2>
+      <form action="/login" method="post">
+        <input  type="text" id="member_id" name="member_id" placeholder="member_id" required/>
+        <input type="password" id="pw" name="pw" placeholder="pw" required />
+        <input type="submit" id="loginbtn" value="Login" />
+      </form>
+      <form action="/signup" method="get">
+        <input type="submit" value="Sign Up" class="button" />
+      </form>
     </div>
-</body>
-
+  </body>
 </html>
